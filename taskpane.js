@@ -1,7 +1,7 @@
-
 var nombre_hoja = "Sheet1"
 var columnas_hoja = null
 var letra_primera_columna_encabezado = "A"
+var letra_ultima_columna_encabezado = "E"
 var indice_columna_inspeccionar = 4
 var indice_primera_fila_encabezado = 1
 var cantidad_filas_cargar_por_ronda = 10
@@ -33,8 +33,8 @@ async function traer_casos_no_procesados(){
                                     .getLastRow()
                                     .load("address")
         
-        //ACA SE FIJA PREVIAMENTE LA Z, CAMBIAR EN CASO DE POBLEMAS
-        let rango_encabezados = hoja.getRange(`${letra_primera_columna_encabezado}${indice_primera_fila_encabezado}:Z${indice_primera_fila_encabezado}`)
+        
+        let rango_encabezados = hoja.getRange(`${letra_primera_columna_encabezado}${indice_primera_fila_encabezado}:${letra_ultima_columna_encabezado}${indice_primera_fila_encabezado}`)
                                     .getUsedRange()
                                     .load("values")
         
@@ -50,7 +50,7 @@ async function traer_casos_no_procesados(){
         while(ultimo_indice_encontrado == false){
             indice_inferior = indice_superior - cantidad_filas_cargar_por_ronda 
             indice_inferior = indice_inferior < 1 ? 1 : indice_inferior //evitar que baje del minimo
-            let indice_rangos = `${nombre_hoja}!${letra_primera_columna_encabezado}${indice_superior}:E${indice_inferior}`
+            let indice_rangos = `${nombre_hoja}!${letra_primera_columna_encabezado}${indice_superior}:${letra_ultima_columna_encabezado}${indice_inferior}`
             
             let rangos = hoja.getRange(indice_rangos).load("values")
             await context.sync()
@@ -62,8 +62,9 @@ async function traer_casos_no_procesados(){
                     ultimo_indice_encontrado = true 
                     break;
                 }
-                let indice_fila = indice_superior - indice
-                resultado.push([letra_primera_columna_encabezado + indice_fila].concat(fila))
+                let index_fila = indice_superior - indice
+                let indice_fila = `${letra_primera_columna_encabezado}${index_fila}:${letra_ultima_columna_encabezado}${index_fila}` //A1:E1 formato
+                resultado.push([indice_fila].concat(fila))
             }
             
             indice_superior = indice_inferior
@@ -79,9 +80,24 @@ function resultado_a_csv(resultado){
         resultado_csv += row + "\r";
     })
     return resultado_csv;
-} 
+}
+
+async function pegar_csv(texto_csv){
+    await Excel.run(async (context) => {
+        let sheet = context.workbook.worksheets.getItem(nombre_hoja);
+        let valores_fila = csv_texto.split('\n').slice(1) //Quitar los encabezados
+        for(let fila of valores_fila){
+            fila = fila.split(delimitador_csv)
+            let range = sheet.getRange(fila[0])
+            range.values = [fila.slice(1)]      //Quitar el indice_excel 
+        }
+        
+        await context.sync();
+    });
+
+}
 //DEBUG
-//traer_casos_no_procesados().then(e => console.log(resultado_a_csv(e)))
+traer_casos_no_procesados().then(e => console.log(resultado_a_csv(e)))
 
   
 
@@ -102,7 +118,3 @@ Office.onReady(async (info) => {
         })
     }
 });
-
-
-
-
