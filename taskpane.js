@@ -1,8 +1,8 @@
-var nombre_hoja = "Sheet1"
+var nombre_hoja = "Completar"
 var columnas_hoja = null
 var letra_primera_columna_encabezado = "A"
-var letra_ultima_columna_encabezado = "E"
-var indice_columna_inspeccionar = 4
+var letra_ultima_columna_encabezado = "K"
+var indice_columna_inspeccionar = 10
 var indice_primera_fila_encabezado = 1
 var cantidad_filas_cargar_por_ronda = 10
 var delimitador_csv = ";"
@@ -97,7 +97,7 @@ async function pegar_csv(texto_csv){
 
 }
 //DEBUG
-traer_casos_no_procesados().then(e => console.log(resultado_a_csv(e)))
+//traer_casos_no_procesados().then(e => console.log(resultado_a_csv(e)))
 
   
 
@@ -109,12 +109,12 @@ Office.onReady(async (info) => {
         Office.context.document.settings.set("Office.AutoShowTaskpaneWithDocument", true);
         Office.context.document.settings.saveAsync();
 
-        columnas_hoja = await Excel.run(async (context) => {
-            let hoja = context.workbook.worksheets.getItem(nombre_hoja);
-            let temp_indice_columnas = hoja.getRange(`A1:Z1`)
+        //columnas_hoja = await Excel.run(async (context) => {
+        //    let hoja = context.workbook.worksheets.getItem(nombre_hoja);
+        //    let temp_indice_columnas = hoja.getRange(`A1:Z1`)
                                         .load("values")
-            await context.sync();
-            return temp_indice_columnas.values[0] //Se retorna el 0 por temas de indices, 1:1
-        })
+        //    await context.sync();
+         //   return temp_indice_columnas.values[0] //Se retorna el 0 por temas de indices, 1:1
+        //})
     }
 });
