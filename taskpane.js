@@ -2,9 +2,9 @@ var nombre_hoja = "Completar"
 var columnas_hoja = null
 var letra_primera_columna_encabezado = "A"
 var letra_ultima_columna_encabezado = "K"
-var indice_columna_inspeccionar = 10
+var indice_columna_inspeccionar = 9 //respuesta
 var indice_primera_fila_encabezado = 1
-var cantidad_filas_cargar_por_ronda = 10
+var cantidad_filas_cargar_por_ronda = 30 // filas x peticion 
 var delimitador_csv = ";"
 
 
