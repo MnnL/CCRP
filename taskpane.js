@@ -112,7 +112,7 @@ Office.onReady(async (info) => {
         //columnas_hoja = await Excel.run(async (context) => {
         //    let hoja = context.workbook.worksheets.getItem(nombre_hoja);
         //    let temp_indice_columnas = hoja.getRange(`A1:Z1`)
-                                        .load("values")
+        //                                .load("values")
         //    await context.sync();
          //   return temp_indice_columnas.values[0] //Se retorna el 0 por temas de indices, 1:1
         //})
