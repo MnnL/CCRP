@@ -17,7 +17,43 @@ function traer_indice_columna_por_nombre(nombre_columna){
     return respuesta;
 }
 
+async function traer_casos_no_procesados_ultimoRango(ultimo_indice){
+    let resultado = []
+    await Excel.run(async (context) => {
+        let hoja = context.workbook.worksheets.getItem(nombre_hoja);
+        let ultimo_indice_encontrado = false
+        ultimo_indice = Number(ultimo_indice)
+        let rango_encabezados = hoja.getRange(`${letra_primera_columna_encabezado}${indice_primera_fila_encabezado}:${letra_ultima_columna_encabezado}${indice_primera_fila_encabezado}`)
+                                    .getUsedRange()
+                                    .load("values")
+        await context.sync();
+        //cambiar para que traiga solo hasta la columna de corte
+        resultado.push(["indice_excel"].concat(rango_encabezados.values[0]))      
+        while(ultimo_indice_encontrado == false){
+            indice_inferior = ultimo_indice + cantidad_filas_cargar_por_ronda 
+            
+            let indice_rangos = `${nombre_hoja}!${letra_primera_columna_encabezado}${ultimo_indice}:${letra_ultima_columna_encabezado}${indice_inferior}`
+            
+            let rangos = hoja.getRange(indice_rangos).load("values")
+            await context.sync()
 
+            let valores_columna = rangos.values.entries()
+
+            for(var [indice,fila] of valores_columna){
+                if(fila[0] == ""){
+                    ultimo_indice_encontrado = true 
+                    break;
+                }
+                let index_fila = ultimo_indice + indice
+                let indice_fila = `${letra_ultima_columna_encabezado}${index_fila}` //E1 formato
+                resultado.push([indice_fila].concat(fila))
+            }
+            
+            ultimo_indice = indice_inferior
+        }
+    });
+    return resultado;
+}
 
 //Trae todas las filas hasta que el valor de la fila en la columna indice_columna_inspeccionar no este vacio
 //La verificacion se hace a partir de la columna letra_primera_columna_encabezado, si los datos se mueven a los lados el codigo se rompe
@@ -64,7 +100,7 @@ async function traer_casos_no_procesados(){
                     break;
                 }
                 let index_fila = indice_superior - indice
-                let indice_fila = `${letra_columna_inspeccionar}${index_fila}` //A1:E1 formato
+                let indice_fila = `${letra_columna_inspeccionar}${index_fila}` //E1 formato
                 resultado.push([indice_fila].concat(fila))
             }
             
@@ -110,4 +146,5 @@ Office.onReady(async (info) => {
         })
     }
 });
+
 
