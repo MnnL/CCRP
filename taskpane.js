@@ -1,8 +1,9 @@
 var nombre_hoja = "Completar"
 var columnas_hoja = null
 var letra_primera_columna_encabezado = "A"
-var letra_ultima_columna_encabezado = "J" //Columna con el dato de respuesta
+var letra_ultima_columna_encabezado = "K" //Columna con el dato de respuesta
 var indice_columna_inspeccionar = 9 //respuesta
+var letra_columna_inspeccionar = "J" //respuesta
 var indice_primera_fila_encabezado = 1
 var cantidad_filas_cargar_por_ronda = 30 // filas x peticion 
 var delimitador_csv = ";"
@@ -63,7 +64,7 @@ async function traer_casos_no_procesados(){
                     break;
                 }
                 let index_fila = indice_superior - indice
-                let indice_fila = `${letra_ultima_columna_encabezado}${index_fila}` //A1:E1 formato
+                let indice_fila = `${letra_columna_inspeccionar}${index_fila}` //A1:E1 formato
                 resultado.push([indice_fila].concat(fila))
             }
             
