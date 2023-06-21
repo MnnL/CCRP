@@ -63,7 +63,7 @@ async function traer_casos_no_procesados(){
                     break;
                 }
                 let index_fila = indice_superior - indice
-                let indice_fila = `${letra_primera_columna_encabezado}${index_fila}:${letra_ultima_columna_encabezado}${index_fila}` //A1:E1 formato
+                let indice_fila = `${letra_ultima_columna_encabezado}${index_fila}` //A1:E1 formato
                 resultado.push([indice_fila].concat(fila))
             }
             
@@ -74,22 +74,17 @@ async function traer_casos_no_procesados(){
 }
 
 function resultado_a_csv(resultado){
-    let resultado_csv = ""
-        resultado.forEach( e => {
-        let row = e.join(delimitador_csv);
-        resultado_csv += row + "\r";
-    })
-    return resultado_csv;
+    return resultado.map(e => e.join(delimitador_csv)).join("\r")
 }
 
 async function pegar_csv(texto_csv){
     await Excel.run(async (context) => {
         let sheet = context.workbook.worksheets.getItem(nombre_hoja);
-        let valores_fila = csv_texto.split('\n').slice(1) //Quitar los encabezados
+        let valores_fila = texto_csv.split('\n').slice(1) //Quitar los encabezados
         for(let fila of valores_fila){
             fila = fila.split(delimitador_csv)
             let range = sheet.getRange(fila[0])
-            range.values = [fila.slice(1)]      //Quitar el indice_excel 
+            range.values = fila[indice_columna_inspeccionar+1]//Quitar el indice_excel 
         }
         
         await context.sync();
@@ -99,22 +94,19 @@ async function pegar_csv(texto_csv){
 //DEBUG
 //traer_casos_no_procesados().then(e => console.log(resultado_a_csv(e)))
 
-  
-
-//Office.actions.associate('PASTECLIPBOARD', traer_casos_no_procesados());
-
 Office.onReady(async (info) => {
     // Check that we loaded into Excel
     if (info.host === Office.HostType.Excel) {
         Office.context.document.settings.set("Office.AutoShowTaskpaneWithDocument", true);
         Office.context.document.settings.saveAsync();
 
-        //columnas_hoja = await Excel.run(async (context) => {
-        //    let hoja = context.workbook.worksheets.getItem(nombre_hoja);
-        //    let temp_indice_columnas = hoja.getRange(`A1:Z1`)
-        //                                .load("values")
-        //    await context.sync();
-         //   return temp_indice_columnas.values[0] //Se retorna el 0 por temas de indices, 1:1
-        //})
+        columnas_hoja = await Excel.run(async (context) => {
+            let hoja = context.workbook.worksheets.getItem(nombre_hoja);
+            let temp_indice_columnas = hoja.getRange(`A1:Z1`)
+                                        .load("values")
+            await context.sync();
+            return temp_indice_columnas.values[0] //Se retorna el 0 por temas de indices, 1:1
+        })
     }
 });
+
