@@ -111,8 +111,8 @@ async function traer_casos_no_procesados(){
 }
 
 function resultado_a_csv(resultado){
-    return resultado.map(e => e.join(delimitador_csv)).join("\r\t")
-    //return resultado.map(e => e.join(delimitador_csv)).join("\r\n")
+    //return resultado.map(e => e.join(delimitador_csv)).join("\r\t")
+    return resultado.map(e => e.join(delimitador_csv)).join("\r\n")
 }
 
 async function pegar_csv(texto_csv){
