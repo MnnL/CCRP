@@ -45,7 +45,7 @@ async function traer_casos_no_procesados_ultimoRango(ultimo_indice){
                     break;
                 }
                 let index_fila = ultimo_indice + indice
-                let indice_fila = `${letra_ultima_columna_encabezado}${index_fila}` //E1 formato
+                let indice_fila = `${letra_columna_inspeccionar}${index_fila}` //E1 formato
                 resultado.push([indice_fila].concat(fila))
             }
             
