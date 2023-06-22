@@ -122,7 +122,7 @@ async function pegar_csv(texto_csv){
         for(let fila of valores_fila){
             fila = fila.split(delimitador_csv)
             let range = sheet.getRange(fila[0])
-            range.values = fila[indice_columna_inspeccionar+1]//Quitar el indice_excel 
+            range.values = fila[1]//Quitar el indice_excel 
         }
         
         await context.sync();
