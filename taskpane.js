@@ -121,6 +121,9 @@ async function pegar_csv(texto_csv){
         let valores_fila = texto_csv.split('\n').slice(1) //Quitar los encabezados
         for(let fila of valores_fila){
             fila = fila.split(delimitador_csv)
+            if(fila.length <= 1){ 
+                continue
+            }
             let range = sheet.getRange(fila[0])
             range.values = fila[1]//Quitar el indice_excel 
         }
